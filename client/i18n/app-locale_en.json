@@ -2,15 +2,15 @@
   "main": {
     "helloWorld": "Hello, world !",
     "text": "This is a starter kit for MEAN stack applications",
-    "name": {
-      "label": "Name",
-      "placeholder": "Enter a name"
+    "search": {
+      "label": "Search Terms",
+      "placeholder": "Enter a value to search for"
     },
-    "description": {
-      "label": "Description",
-      "placeholder": "Enter a description"
+    "location": {
+      "label": "Location",
+      "placeholder": "Enter a location(City or State)"
     },
-    "show": "Show",
+    "refresh": "Refresh",
     "submit": "Send"
   }
 }

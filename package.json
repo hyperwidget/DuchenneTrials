@@ -10,11 +10,14 @@
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "body-parser": "^1.15.0",
     "config": "^1.16.0",
     "cors": "^2.7.1",
     "express": "^4.13.3",
-    "mongoose": "^4.4.7"
+    "mongoose": "^4.4.7",
+    "unzip": "^0.1.11",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "browser-sync": "^2.11.1",
