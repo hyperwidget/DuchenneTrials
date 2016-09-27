@@ -1,41 +1,50 @@
-<div class="container-fluid">
-  <div class="jumbotron">
-    <div class="container">
-      <h1>{{'main.helloWorld' | translate}}</h1>
-      <p>{{'main.text' | translate}}</p>
+<div class="container">
+  <div class="col-md-3">
+    <button class="btn btn-success" ng-click="mainVm.postThings()">{{'main.refresh' | translate}}</button>
+    <h2>Search</h2>
+    <div class="trial-form">
+      <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
+        <div class="form-group">
+          <label for="search">{{'main.search.label' | translate}}</label>
+          <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="{{'main.search.placeholder'| translate}}">
+        </div>
+
+        <div class="form-group">
+          <label for="location">{{'main.location.label' | translate}}</label>
+          <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="{{'main.location.placeholder'| translate}}">
+        </div>
+
+        <div class="form-group">
+          <label for="exon_53">
+            <input type="checkbox" id="exon_53" name="exon_53" ng-model="mainVm.searchParams.exon_53">
+            {{'main.exon_53' | translate}}
+            </label>
+
+          <label for="exon_51">
+            <input type="checkbox" id="exon_51" name="exon_51" ng-model="mainVm.searchParams.exon_51">
+            {{'main.exon_51' | translate}}
+            </label>
+
+          <label for="exon_49">
+            <input type="checkbox" id="exon_49" name="exon_49" ng-model="mainVm.searchParams.exon_49">
+            {{'main.exon_49' | translate}}
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-success">{{'main.submit' | translate}}</button> {{mainVm.status}}
+      </form>
     </div>
   </div>
-  <div class="container">
-    <div class="col-md-3">
-      <button class="btn btn-success" ng-click="mainVm.postThings()">{{'main.refresh' | translate}}</button>
-      <h2>Search</h2>
-      <div class="trial-form">
-        <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
-          <div class="form-group">
-            <label for="search">{{'main.search.label' | translate}}</label>
-            <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="{{'main.search.placeholder'| translate}}">
-          </div>
 
-          <div class="form-group">
-            <label for="location">{{'main.location.label' | translate}}</label>
-            <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="{{'main.location.placeholder'| translate}}">
-          </div>
-          
-          <button type="submit" class="btn btn-success">{{'main.submit' | translate}}</button> {{mainVm.status}}
-        </form>
-      </div>
+
+  <div class="col-md-9">
+    <div ng-repeat="trial in mainVm.trialsList" class="col-sm-12 card" ui-sref="trial({ trialId: trial._id })" ">
+      <h3>{{trial.study_type}} | {{trial.overall_status}}</h3>
+      <h3>{{trial.official_title}}</h3>
+      <p data-ng-bind-html="trial.brief_summary.textblock | limitTo: 250 "></p>
     </div>
-
-
-    <div class="col-md-9">
-      <div ng-repeat="trial in mainVm.trialsList" class="col-sm-12 card">
-        <h3>{{trial.study_type}} | {{trial.overall_status}}</h3>
-        <h3>{{trial.official_title}}</h3>
-        <p data-ng-bind-html="trial.brief_summary.textblock | limitTo: 250"></p>
-      </div>
-      <div ng-if="mainVm.trialsList.length == 0" class="card">
-        <strong>No results found...</strong>
-      </div>
+    <div ng-if="mainVm.trialsList.length==0 " class="card ">
+      <strong>No results found...</strong>
     </div>
   </div>
 </div>

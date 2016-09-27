@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="col-md-9">
+    <div class="col-md-12">
+      <h2>{{vm.trial.study_type}} | {{vm.trial.overall_status}}</h2>
+      <h2>{{vm.trial.official_title}}</h2>
+      <p data-ng-bind-html="vm.trial.brief_summary.textblock"></p>
+    </div>
+    <div class="col-md-6">
+      <h3>Study Info</h3>
+      <h4>Study Type</h4>
+      {{vm.trial.study_type}}
+      <h4>Length Of Study</h4>
+      {{vm.trial.study_type}}
+    </div>
+    <div class="col-md-6">
+      <h3>Info</h3>
+      <h4>Study Phase</h4>
+      {{vm.trial.phase}}
+      <h4>Lead Sponsor</h4>
+      {{vm.trial.sponsors.lead_sponsor.agency}}
+    </div>
+    <div class="col-md-12">
+      <a id="eligibility"></a>
+      <h2>Eligibility Details</h2>
+      <h4>Criteria</h4>
+      <p data-ng-bind-html="vm.trial.eligibility.criteria.textblock"></p>
+    </div>
+    <div class="col-md-3">
+      <h4>Gender</h4>
+      <p>{{vm.trial.eligibility.gender}}</p>
+    </div>
+    <div class="col-md-3">
+      <h4>Volunteer Status</h4>
+      <p>{{vm.trial.eligibility.healthy_volunteers}}</p>
+    </div>
+    <div class="col-md-3">
+      <h4>Minimum Age</h4>
+      <p>{{vm.trial.eligibility.minimum_age}}</p>
+    </div>
+    <div class="col-md-3">
+      <h4>Maximum Age</h4>
+      <p>{{vm.trial.eligibility.maximum_age}}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <h2>Eligibility</h2>
+    <small>See <a href="" ng-click="vm.goToAnchor('eligibility')">Eligibility Details</a> for detailed information</small>
+  </div>
+</div>

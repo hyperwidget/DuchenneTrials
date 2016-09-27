@@ -27,13 +27,22 @@
   <noscript>
     <div class="alert alert-warning" role="alert">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>Warning !</strong> It looks like your browser either doesn't support JavaScript or it has been disabled, please enable JavaScript and refresh the page.
+      <strong>Warning !</strong> It looks like your browser either doesn't support JavaScript or it has been disabled, please
+      enable JavaScript and refresh the page.
     </div>
   </noscript>
   <!--[if lt IE 9]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
-  <div ui-view></div>
+  <div class="container-fluid">
+    <div class="jumbotron">
+      <div class="container">
+        <h1>{{'main.helloWorld' | translate}}</h1>
+        <p>{{'main.text' | translate}}</p>
+      </div>
+    </div>
+    <div ui-view></div>
+  </div>
   <!-- build:js scripts/vendor.js -->
   <script src="../bower_components/angular/angular.js"></script>
   <script src="../bower_components/angular-animate/angular-animate.js"></script>

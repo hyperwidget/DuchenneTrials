@@ -8,10 +8,7 @@ var xml2js = require('xml2js');
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/duchenne-trials-dev';
 var assert = require('assert');
-
-
-// var unzip = require('unzip');
-// var path = require('path');
+var BSON = require('bson').BSONPure
 
 /**
  * GET /trials
@@ -49,8 +46,22 @@ function getSearchTerms(params) {
           { 'location.facility.address.city': new RegExp(params.location, 'i') },
           { 'location.facility.address.state': new RegExp(params.location, 'i') }
         ]
-      }]
+      },
+
+    ]
   };
+  if (params.exon_53 === 'true') {
+    terms.$and.push({ exon_53: true });
+  }
+
+  if (params.exon_51 === 'true') {
+    terms.$and.push({ exon_51: true });
+  }
+
+  if (params.exon_49 === 'true') {
+    terms.$and.push({ exon_49: true });
+  }
+
   return terms;
 }
 
@@ -61,15 +72,19 @@ function getSearchTerms(params) {
  * Find trial by id
  *
  */
-exports.get = function (req, res, next) {
-  Trial.findById(req.params.id, function (err, trial) {
-    if (err) {
-      return next(err);
-    }
-    if (!trial) {
+exports.get = function (req, res) {
+  MongoClient.connect(url, function (err, db) {
+    if (req.params.id.length === 24) {
+      db.collection('trials').findOne({ _id: new BSON.ObjectID(req.params.id) }, function (err, trial) {
+        if (err) {
+          return res.status(404).send('Not Found');
+        } else {
+          return res.status(200).json(trial);
+        }
+      });
+    } else {
       return res.status(404).send('Not Found');
     }
-    return res.status(200).json(trial);
   });
 };
 
@@ -94,10 +109,11 @@ exports.post = function (req, res) {
           filenames.forEach(function (filename) {
             var content = fs.readFileSync('./tmp/files/' + filename).toString();
             parser.parseString(content, function (err, result) {
-              db.collection('trials').insertOne(result.clinical_study, function (err) {
+              var trial = applyMutations(result.clinical_study);
+              db.collection('trials').insertOne(trial, function (err) {
                 if (err !== null) {
                   console.log(err);
-                  console.log(result.clinical_study);
+                  console.log(trial);
                 }
               });
             });
@@ -108,6 +124,24 @@ exports.post = function (req, res) {
       });
     });
 };
+
+function applyMutations(trial) {
+  var mutations = {};
+
+  if (trial.brief_summary.textblock.indexOf('exon 53') > -1) {
+    mutations.exon_53 = true;
+  }
+
+  if (trial.brief_summary.textblock.indexOf('exon 51') > -1) {
+    mutations.exon_51 = true;
+  }
+
+  if (trial.brief_summary.textblock.indexOf('exon 49') > -1) {
+    mutations.exon_49 = true;
+  }
+
+  return Object.assign(trial, mutations);
+}
 
 /**
  * PUT /trials/:id

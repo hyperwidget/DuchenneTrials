@@ -14,6 +14,11 @@
       template: '<main></main>'
     });
 
+    $stateProvider.state('trial', {
+      url: '/{trialId}',
+      template: '<trial></trial>'
+    });
+
     $urlRouterProvider.otherwise('/');
   }
 })();

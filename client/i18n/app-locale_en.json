@@ -10,6 +10,9 @@
       "label": "Location",
       "placeholder": "Enter a location(City or State)"
     },
+    "exon_53": "Exon 53",
+    "exon_51": "Exon 51",
+    "exon_49": "Exon 49",
     "refresh": "Refresh",
     "submit": "Send"
   }
