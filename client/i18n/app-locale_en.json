@@ -1,7 +1,7 @@
 {
   "main": {
     "helloWorld": "Hello, world !",
-    "text": "This is a starter kit for MEAN stack applications",
+    "text": "This is the start of the page for Duchenne Trials",
     "search": {
       "label": "Search Terms",
       "placeholder": "Enter a value to search for"

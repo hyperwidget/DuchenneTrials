@@ -9,6 +9,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/duchenne-trials-dev';
 var assert = require('assert');
 var BSON = require('bson').BSONPure
+var tmpFilesDir = './tmp/files';
 
 /**
  * GET /trials
@@ -18,38 +19,66 @@ var BSON = require('bson').BSONPure
  *
  */
 exports.find = function (req, res) {
+  var page = parseInt(req.query.page) - 1 || 0;
+  var limit = parseInt(req.query.limit) || 10;
   MongoClient.connect(url, function (err, db) {
-    var cursor = db.collection('trials').find(getSearchTerms(req.query)).limit(20);
-    var response = [];
-    cursor.each(function (err, doc) {
-      assert.equal(err, null);
-      if (doc != null) {
-        response.push(doc);
-      } else {
-        db.close();
-        return res.status(200).json(response);
-      }
+    var response = { trials: [] };
+    db.collection('trials').find(getSearchTerms(req.query)).count({}, function (err, count) {
+      response.total = count;
+      var cursor = db.collection('trials').find(getSearchTerms(req.query)).skip(page * limit).limit(limit);
+      cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+          response.trials.push(doc);
+        } else {
+          db.close();
+          return res.status(200).json(response);
+        }
+      });
     });
   });
 };
 
 function getSearchTerms(params) {
-  var terms = {
-    $and: [{
-      $or: [
-        { official_title: new RegExp(params.search, 'i') },
-        { 'brief_summary.textblock': new RegExp(params.search, 'i') }
-      ]
-    },
+  var terms = { $and: [] };
+
+  // Text Search terms
+  if (params.search) {
+    terms.$and.push(
+      {
+        $or: [
+          { official_title: new RegExp(params.search, 'i') },
+          { 'brief_summary.textblock': new RegExp(params.search, 'i') }
+        ]
+      }
+    )
+  }
+
+  // Location search terms
+  if (params.location) {
+    terms.$and.push(
       {
         $or: [
           { 'location.facility.address.city': new RegExp(params.location, 'i') },
+          { 'location.facility.address.country': new RegExp(params.location, 'i') },
           { 'location.facility.address.state': new RegExp(params.location, 'i') }
         ]
-      },
+      }
+    )
+  }
 
-    ]
-  };
+  // Params for age search 
+  if (params.age) {
+    terms.$and.push(
+      // Age search terms
+      {
+        "minimum_age": { "$lte": parseInt(params.age) },
+        "maximum_age": { "$gte": parseInt(params.age) }
+      }
+    )
+  }
+
+  // Params for seaching mutation
   if (params.exon_53 === 'true') {
     terms.$and.push({ exon_53: true });
   }
@@ -62,7 +91,26 @@ function getSearchTerms(params) {
     terms.$and.push({ exon_49: true });
   }
 
-  return terms;
+  // Params for searching study_type
+  if (params.study_type) {
+    var study_types = JSON.parse(params.study_type);
+    var search_studies = [];
+    for (var type in study_types) {
+      if (study_types[type]) {
+        if (type === "patient_registry") {
+          search_studies.push("Observational [Patient Registry]");
+        } else if (type === "expanded_access") {
+          search_studies.push("Expanded Access");
+        } else {
+          search_studies.push(type.charAt(0).toUpperCase() + type.slice(1));
+        }
+      }
+    }
+
+    terms.$and.push({ study_type: { $in: search_studies } });
+  }
+
+  return terms.$and.length > 0 ? terms : {};
 }
 
 /**
@@ -96,20 +144,24 @@ exports.get = function (req, res) {
  *
  */
 exports.post = function (req, res) {
-  request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&page=1')
+  clearTmpFiles();
+
+  request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true')
     .pipe(fs.createWriteStream('./tmp/bootstrap.zip'))
     .on('close', function () {
       var parser = new xml2js.Parser({ ignoreAttrs: true, explicitArray: false, trim: true });
       var zip = new AdmZip("./tmp/bootstrap.zip");
-      zip.extractAllTo(/*target path*/"./tmp/files/", /*overwrite*/true);
+      zip.extractAllTo(/*target path*/tmpFilesDir, /*overwrite*/true);
 
       fs.readdir('./tmp/files', function (err, filenames) {
         MongoClient.connect(url, function (err, db) {
           db.collection('trials').remove();
           filenames.forEach(function (filename) {
-            var content = fs.readFileSync('./tmp/files/' + filename).toString();
+            var content = fs.readFileSync(tmpFilesDir + "/" + filename).toString();
             parser.parseString(content, function (err, result) {
               var trial = applyMutations(result.clinical_study);
+              trial = applyLastLocalUpdate(trial);
+              trial = applyAges(trial);
               db.collection('trials').insertOne(trial, function (err) {
                 if (err !== null) {
                   console.log(err);
@@ -124,6 +176,10 @@ exports.post = function (req, res) {
       });
     });
 };
+
+function applyLastLocalUpdate(trial) {
+  return Object.assign(trial, { lastLocalUpdate: new Date().toLocaleTimeString() });
+}
 
 function applyMutations(trial) {
   var mutations = {};
@@ -141,6 +197,24 @@ function applyMutations(trial) {
   }
 
   return Object.assign(trial, mutations);
+}
+
+function applyAges(trial) {
+  var ages = {};
+
+  if (trial.eligibility.minimum_age === "N/A") {
+    ages.minimum_age = 0
+  } else {
+    ages.minimum_age = parseInt(trial.eligibility.minimum_age.split(' ')[0]);
+  }
+
+  if (trial.eligibility.maximum_age === "N/A") {
+    ages.maximum_age = 200;
+  } else {
+    ages.maximum_age = parseInt(trial.eligibility.maximum_age.split(' ')[0]);
+  }
+
+  return Object.assign(trial, ages);
 }
 
 /**
@@ -169,4 +243,55 @@ exports.put = function (req, res, next) {
       return res.status(200).json(trial);
     });
   });
+}
+
+function clearTmpFiles() {
+  if (fs.existsSync(tmpFilesDir)) {
+    fs.readdirSync(tmpFilesDir).forEach(function (file) {
+      var curPath = tmpFilesDir + "/" + file;
+      fs.unlinkSync(curPath);
+    });
+  }
+  if (fs.existsSync('./tmp/bootstrap.zip')) {
+    fs.unlinkSync('./tmp/bootstrap.zip');
+  }
+}
+
+exports.getUpdates = function (req, res) {
+  clearTmpFiles();
+  var d = new Date();
+  d.setDate(d.getDate() - 1);
+  var searchDate = ("0" + (d.getMonth() + 1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear()
+  request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=' + searchDate)
+    .pipe(fs.createWriteStream('./tmp/bootstrap.zip'))
+    .on('close', function () {
+      var parser = new xml2js.Parser({ ignoreAttrs: true, explicitArray: false, trim: true });
+      try {
+        var zip = new AdmZip("./tmp/bootstrap.zip");
+        zip.extractAllTo(/*target path*/tmpFilesDir, /*overwrite*/true);
+        fs.readdir(tmpFilesDir, function (err, filenames) {
+          MongoClient.connect(url, function (err, db) {
+            filenames.forEach(function (filename) {
+              var content = fs.readFileSync(tmpFilesDir + '/' + filename).toString();
+              parser.parseString(content, function (err, result) {
+                var trial = applyMutations(result.clinical_study);
+                trial = applyLastLocalUpdate(trial);
+                trial = applyAges(trial);
+                db.collection('trials').update({ 'id_info.nct_id': trial.id_info.nct_id }, trial, { upsert: true }, function (err) {
+                  if (err !== null) {
+                    console.log(err);
+                    console.log(trial);
+                  }
+                });
+              });
+            });
+            db.close();
+            return res.status(200).json();
+          });
+        });
+      } catch (except) {
+        console.log(except);
+        return res.status(200).json();
+      }
+    });
 };

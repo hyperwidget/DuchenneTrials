@@ -19,23 +19,32 @@
     var vm = this;
 
     vm.thing = {};
-    vm.searchParams = {};
+    vm.searchParams = {
+      page: 1,
+      limit: 10
+    };
     vm.status = '';
-    vm.page = 0;
 
     vm.getThings = function () {
       $http.get('/api/trials', {
         params: vm.searchParams
       })
         .then(function (response) {
-          vm.trialsList = vm.trialsList.concat(response.data);
+          vm.trialsList = vm.trialsList.concat(response.data.trials);
+          vm.total = response.data.total;
         });
     };
     vm.getThings();
 
+    vm.loadMore = function(){
+      vm.searchParams.page++;
+      vm.getThings();
+    }
+
     vm.search = function () {
       vm.page = 0;
       vm.clearTrials();
+      vm.resetPaging();
       vm.getThings();
     }
 
@@ -50,6 +59,11 @@
     vm.clearTrials = function () {
       vm.trialsList = [];
     }
+
+    vm.resetPaging = function(){
+      vm.searchParams.page = 1;
+    }
+
     vm.clearTrials();
 
   }

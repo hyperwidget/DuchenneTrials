@@ -9,6 +9,7 @@ var trial = require('./trial/trial.controller');
 router.get('/api/trials', trial.find);
 router.get('/api/trials/:id', trial.get);
 router.post('/api/trials/refresh', trial.post);
-router.put('/api/trials/:id', trial.put);
+router.post('/api/trials/updates', trial.getUpdates);
+// router.put('/api/trials/:id', trial.put);
 
 module.exports = router;

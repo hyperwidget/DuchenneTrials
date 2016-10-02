@@ -1,34 +1,79 @@
 <div class="container">
   <div class="col-md-3">
-    <button class="btn btn-success" ng-click="mainVm.postThings()">{{'main.refresh' | translate}}</button>
+    <button class="btn btn-success" ng-click="mainVm.postThings()">Refresh</button>
     <h2>Search</h2>
     <div class="trial-form">
       <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
         <div class="form-group">
-          <label for="search">{{'main.search.label' | translate}}</label>
-          <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="{{'main.search.placeholder'| translate}}">
+          <label for="search">Search</label>
+          <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="Enter a value to search for">
         </div>
 
         <div class="form-group">
-          <label for="location">{{'main.location.label' | translate}}</label>
-          <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="{{'main.location.placeholder'| translate}}">
+          <label for="location">Location</label>
+          <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="Enter a location (City or State)">
         </div>
 
         <div class="form-group">
-          <label for="exon_53">
-            <input type="checkbox" id="exon_53" name="exon_53" ng-model="mainVm.searchParams.exon_53">
-            {{'main.exon_53' | translate}}
-            </label>
+          <label for="age">Age</label>
+          <input type="text" class="form-control" id="age" name="age" ng-model="mainVm.searchParams.age" placeholder="Enter an age (numerical) to search for">
+        </div>
 
-          <label for="exon_51">
-            <input type="checkbox" id="exon_51" name="exon_51" ng-model="mainVm.searchParams.exon_51">
-            {{'main.exon_51' | translate}}
-            </label>
+        <div class="form-group">
+          <label for="mutation">Mutation</label>
+          <div class="checkbox">
+            <label for="exon_53">
+              <input type="checkbox" id="exon_53" name="exon_53" ng-model="mainVm.searchParams.exon_53">
+              Exon 53
+              </label>
+          </div>
 
-          <label for="exon_49">
-            <input type="checkbox" id="exon_49" name="exon_49" ng-model="mainVm.searchParams.exon_49">
-            {{'main.exon_49' | translate}}
-            </label>
+          <div class="checkbox">
+            <label for="exon_51">
+              <input type="checkbox" id="exon_51" name="exon_51" ng-model="mainVm.searchParams.exon_51">
+              Exon 51
+              </label>
+          </div>
+
+          <div class="checkbox">
+            <label for="exon_49">
+              <input type="checkbox" id="exon_49" name="exon_49" ng-model="mainVm.searchParams.exon_49">
+              Exon 49
+              </label>
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label for="study_type">Study Types</label>
+
+          <div class="checkbox">
+            <label for="observational">
+              <input type="checkbox" id="observational" name="exon_53" ng-model="mainVm.searchParams.study_type.observational">
+              Observational
+              </label>
+          </div>
+
+          <div class="checkbox">
+            <label for="patient_registry">
+              <input type="checkbox" id="patient_registry" name="patient_registry" ng-model="mainVm.searchParams.study_type.patient_registry">
+              Observational [Patient Registry]
+              </label>
+          </div>
+
+          <div class="checkbox">
+            <label for="interventional">
+              <input type="checkbox" id="interventional" name="interventional" ng-model="mainVm.searchParams.study_type.interventional">
+              Interventional
+              </label>
+          </div>
+
+          <div class="checkbox">
+            <label for="expanded_access">
+              <input type="checkbox" id="expanded_access" name="expanded_access" ng-model="mainVm.searchParams.study_type.expanded_access">
+              Expanded Access
+              </label>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-success">{{'main.submit' | translate}}</button> {{mainVm.status}}
@@ -38,6 +83,12 @@
 
 
   <div class="col-md-9">
+    <div ng-if="mainVm.trialsList.length !==0" class="card ">
+      <strong>Showing 1
+          - {{mainVm.searchParams.page * mainVm.searchParams.limit + mainVm.trials.length}} 
+          of {{mainVm.total}}
+      </strong>
+    </div>
     <div ng-repeat="trial in mainVm.trialsList" class="col-sm-12 card" ui-sref="trial({ trialId: trial._id })" ">
       <h3>{{trial.study_type}} | {{trial.overall_status}}</h3>
       <h3>{{trial.official_title}}</h3>
@@ -46,6 +97,9 @@
     <div ng-if="mainVm.trialsList.length==0 " class="card ">
       <strong>No results found...</strong>
     </div>
+    <button ng-if="mainVm.searchParams.page * mainVm.searchParams.limit + 1 + mainVm.trials.length < mainVm.total
+      " class="button "
+      ng-click="mainVm.loadMore(); ">Load More</button>
   </div>
 </div>
 </div>
