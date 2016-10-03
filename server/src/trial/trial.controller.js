@@ -184,7 +184,7 @@ function applyLastLocalUpdate(trial) {
 }
 
 function applyMutations(trial) {
-  var mutations = {};
+  var mutations = [];
 
   if (trial.brief_summary.textblock.indexOf('exon 53') > -1) {
     mutations.exon_53 = true;
@@ -198,7 +198,7 @@ function applyMutations(trial) {
     mutations.exon_49 = true;
   }
 
-  return Object.assign(trial, mutations);
+  return Object.assign(trial, {mutations: mutations});
 }
 
 function applyAges(trial) {
