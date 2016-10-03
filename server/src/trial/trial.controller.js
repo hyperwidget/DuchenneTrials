@@ -107,7 +107,9 @@ function getSearchTerms(params) {
       }
     }
 
-    terms.$and.push({ study_type: { $in: search_studies } });
+    if (search_studies.length > 0) {
+      terms.$and.push({ study_type: { $in: search_studies } });
+    }
   }
 
   return terms.$and.length > 0 ? terms : {};

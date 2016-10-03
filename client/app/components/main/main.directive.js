@@ -24,6 +24,8 @@
       limit: 10
     };
     vm.status = '';
+    vm.startIndex = 1;
+    vm.endIndex = 20;
 
     vm.getThings = function () {
       $http.get('/api/trials', {
@@ -32,6 +34,7 @@
         .then(function (response) {
           vm.trialsList = vm.trialsList.concat(response.data.trials);
           vm.total = response.data.total;
+          vm.endIndex = vm.trialsList.length;
         });
     };
     vm.getThings();

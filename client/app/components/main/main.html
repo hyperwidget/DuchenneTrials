@@ -84,8 +84,8 @@
 
   <div class="col-md-9">
     <div ng-if="mainVm.trialsList.length !==0" class="card ">
-      <strong>Showing 1
-          - {{mainVm.searchParams.page * mainVm.searchParams.limit + mainVm.trials.length}} 
+      <strong>Showing {{mainVm.startIndex}}
+          - {{mainVm.endIndex}} 
           of {{mainVm.total}}
       </strong>
     </div>
