@@ -57,7 +57,7 @@ gulp.task('client:serve', function(cb) {
 
   // Proxy Middleware to Express app
   var proxyServer = proxy('/api', {
-    target: 'http://localhost:3002'
+    target: 'http://localhost:3333'
   });
 
   browserSync.instance = browserSync.init({
@@ -69,6 +69,7 @@ gulp.task('client:serve', function(cb) {
         '/bower_components': 'bower_components'
       }
     },
+    port: 3010,
     //browser: ['google chrome', 'firefox', 'internet explorer'],
     browser: (os.platform() === 'linux' ? ['google-chrome'] : ['google chrome'])
   }, cb);
