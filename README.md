@@ -6,6 +6,12 @@
 
 > Starter kit (seed) for MEAN stack applications - MongoDB, Express, AngularJS, NodeJS with Gulp
 
+* npm install
+* bower install
+* install mongo
+* mkdir ./tmp/files
+* npm start
+
 ## Features
 Client:
   - [AngularJS](https://angularjs.org/)

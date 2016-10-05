@@ -48,7 +48,8 @@ function getSearchTerms(params) {
       {
         $or: [
           { official_title: new RegExp(params.search, 'i') },
-          { 'brief_summary.textblock': new RegExp(params.search, 'i') }
+          { 'brief_summary.textblock': new RegExp(params.search, 'i') },
+          { 'source': new RegExp(params.search, 'i') }
         ]
       }
     )
