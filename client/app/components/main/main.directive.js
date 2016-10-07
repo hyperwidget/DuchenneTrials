@@ -9,9 +9,30 @@
         templateUrl: 'app/components/main/main.html',
         controller: MainCtrl,
         controllerAs: 'mainVm',
-        bindToController: true
+        bindToController: true,
+        link: linkFunc
       };
     });
+
+  function linkFunc() {
+    var $sidebar = $("#search"),
+      $window = $(window),
+      offset = $sidebar.offset(),
+      topPadding = 0;
+
+
+    $window.scroll(function () {
+      if ($window.scrollTop() > 115 && $window.width() > 991) {
+        $sidebar.css({
+          marginTop: $window.scrollTop() - 115 + topPadding
+        });
+      } else {
+        $sidebar.css({
+          marginTop: 0
+        });
+      }
+    });
+  }
 
   MainCtrl.$inject = ['$http'];
 
@@ -39,7 +60,7 @@
     };
     vm.getThings();
 
-    vm.loadMore = function(){
+    vm.loadMore = function () {
       vm.searchParams.page++;
       vm.getThings();
     }
@@ -63,7 +84,7 @@
       vm.trialsList = [];
     }
 
-    vm.resetPaging = function(){
+    vm.resetPaging = function () {
       vm.searchParams.page = 1;
     }
 

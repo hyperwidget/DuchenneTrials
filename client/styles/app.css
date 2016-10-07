@@ -17,7 +17,7 @@
   border-color: #ddd;
   border-width: 1px;
   border-style: solid;
-  border-radius: 4px 4px 0 0;
+  /*border-radius: 4px 4px 0 0;*/
   padding: 10px;
 }
 
@@ -39,4 +39,251 @@
 
 .container {
   padding: 2px 16px;
+}
+
+@import 'https://fonts.googleapis.com/css?family=Droid+Sans';
+@import 'https://fonts.googleapis.com/css?family=Chewy';
+
+body {
+  font-family: "Droid Sans", "Verdana", "Arial", sans-serif;
+  background: #444444;
+}
+
+.navbar-fixed-top {
+  border-bottom: 3px solid black;
+  background: #fff;
+}
+
+.navbar-fixed-top .container {
+  width: 100%;
+  padding-left: 54px;
+  background: white;
+}
+
+.navbar-center {
+  margin-left: 16%;
+}
+
+.logo {
+  width: 424px;
+  height: 50px;
+  display: inline-block;
+  background: url(../JettLogo2.jpg) 0 0 no-repeat;
+  background-size: 424px 50px;
+  text-indent: -9999px;
+  outline: none;
+}
+
+.icuc-logo {
+  width: 200px;
+  height: 67px;
+  display: inline-block;
+  background: url(../IcucLogo.svg) 0 0 no-repeat;
+  background-size: 200px 75px;
+  text-indent: -9999px;
+  outline: none;
+}
+
+.navbar-brand {
+  font-style: normal;
+  font-size: 18px;
+  color: #d64436 !important;
+  font-weight: 700;
+  display: block;
+}
+
+.offset-container {
+  padding-bottom: 15px;
+}
+
+.hero {
+  width: 100%;
+}
+
+.sc{
+  font-size: 1.21em;
+}
+
+.huggin {
+  color: #990000;
+  font-size: 1.5em;
+}
+
+.premier-sponser {
+  max-width: none !important;
+  width: 100%;
+}
+
+.hug-funders{
+  font-family: 'Chewy', cursive;
+  font-size: 3.1em;
+}
+
+#sponsers img {
+  width: 100%;
+}
+
+#grid {
+  overflow-y: scroll;
+}
+
+.icuc-circle {
+  width: 100%;
+}
+
+.grid-item {
+  width: 25%;
+  overflow-y: hidden;
+}
+
+.grid-item img {
+  width: 100%;
+}
+
+.grid-item:hover .overlay {
+  max-height: 500px;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 1.5em;
+  color: white;
+  transition-property: max-height;
+  transition-duration: .5s;
+  transition-timing-function: ease-out(0, 1, 0.5, 1);
+}
+
+.overlay a {
+  color: white;
+}
+
+.overlay a:hover {
+  color: white;
+  text-decoration: none;
+  transition-property: max-height;
+  transition-duration: .5s;
+  transition-timing-function: ease-in(0, 1, 0.5, 1);
+}
+
+.avatar {
+  width: 15% !important;
+  margin-left: 15px;
+  margin-right: 15px;
+  /*border-radius: 4px;*/
+}
+
+.info-div {
+  background: #ffffff;
+}
+
+.donate {
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.donate strong {
+  color: #777777;
+}
+
+.donate-button, .load-more {
+  text-transform: uppercase;
+  background: #d64436;
+  color: #ffffff !important;
+  margin: 0 50px 0 10px;
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 1px;
+  box-shadow: 0 4px 4px -2px #cccccc;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 700;
+  display: inline-block !important;
+}
+
+.donate-button:hover, .load-more:hover {
+  background: #b43125 !important;
+  color: #ffffff !important;
+}
+
+#load-more {
+  margin-top: 20px;
+}
+
+.load-more {
+  width: 30%;
+  line-height: 4em;
+  font-size: 2.5em;
+  margin-left: 35%;
+}
+
+.post-grid {
+  margin-top: 20px;
+  background: #ffffff;
+}
+
+.footer-logo {
+  width: 100%;
+}
+
+#footer {
+  color: white;
+  padding-bottom: 15px;
+}
+
+#footer a {
+  color: white;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+
+/* Small Devices, Tablets */
+
+@media only screen and (max-width: 768px) {
+  .grid-item {
+    width: 33%;
+  }
+}
+
+
+/* Extra Small Devices, Phones */
+
+@media only screen and (max-width: 480px) {
+  .grid-item {
+    width: 50%;
+  }
+  .load-more {
+    width: 75%;
+    margin-left: 10%;
+  }
+  .offset-container {
+    margin-top: 90px;
+  }
+}
+
+
+/* Custom, iPhone Retina */
+
+@media only screen and (max-width: 320px) {
+  .grid-item {
+    width: 50%;
+  }
+  .load-more {
+    width: 75%;
+    margin-left: 10%;
+  }
+  .offset-container {
+    margin-top: 47px;
+  }
 }
