@@ -10,8 +10,29 @@
         controller: TrialCtrl,
         controllerAs: 'vm',
         bindToController: true,
+        link: linkFunc
       };
     });
+
+  function linkFunc() {
+    var $eligibility = $("#eligibilityList"),
+      $window = $(window),
+      offset = $eligibility.offset(),
+      topPadding = 0;
+
+
+    $window.scroll(function () {
+      if ($window.scrollTop() > 115 && $window.width() > 991) {
+        $eligibility.css({
+          marginTop: $window.scrollTop() - 115 + topPadding
+        });
+      } else {
+        $eligibility.css({
+          marginTop: 0
+        });
+      }
+    });
+  }
 
   TrialCtrl.$inject = ['$http', '$state', '$anchorScroll', '$location'];
 
