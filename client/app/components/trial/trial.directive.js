@@ -16,9 +16,7 @@
 
   function linkFunc() {
     var $eligibility = $("#eligibilityList"),
-      $window = $(window),
-      offset = $eligibility.offset(),
-      topPadding = 0;
+      $window = $(window);
 
     $window.scroll(function () {
       if ($window.scrollTop() > 115 && $window.width() > 991) {

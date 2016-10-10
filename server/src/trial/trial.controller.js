@@ -187,7 +187,7 @@ exports.post = function (req, res) {
             });
           });
           db.close();
-          sendEmailUpdate(`DATABASE REFRESHED; ${filenames.length} records in database.`);
+          sendEmailUpdate('DATABASE REFRESHED; ' + filenames.length + ' records in database.');
           return res.status(200).json();
         });
       });
@@ -280,7 +280,7 @@ exports.getUpdates = function (req, res) {
   var d = new Date();
   d.setDate(d.getDate() - 1);
   var searchDate = ("0" + (d.getMonth() + 1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear()
-  request.get(`http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=${searchDate}`)
+  request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=' + searchDate)
     .pipe(fs.createWriteStream('./tmp/bootstrap.zip'))
     .on('close', function () {
       var parser = new xml2js.Parser({ ignoreAttrs: true, explicitArray: false, trim: true });
@@ -303,14 +303,14 @@ exports.getUpdates = function (req, res) {
                 });
               });
             });
-            sendEmailUpdate(`Update pulled; ${filenames.length} records changed.`);
+            sendEmailUpdate('Update pulled; ' + filenames.length + ' records changed.');
             db.close();
             return res.status(200).json();
           });
         });
       } catch (except) {
         console.log(except);
-        sendEmailUpdate(`Update pulled; issue unzipping; no records changed`);
+        sendEmailUpdate('Update pulled; issue unzipping; no records changed');
         return res.status(200).json();
       }
     });
@@ -327,7 +327,7 @@ function sendEmailUpdate(message) {
   };
 
   // send mail with defined transport object 
-  transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, function (error) {
     if (error) {
       return console.log(error);
     }

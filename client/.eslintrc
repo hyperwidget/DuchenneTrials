@@ -2,7 +2,8 @@
   "extends": "eslint:recommended",
   "plugins": ["angular"],
   "env": {
-    "browser": true
+    "browser": true,
+    "jquery": true
   },
   "globals": {
     "angular": true,

@@ -16,10 +16,7 @@
 
   function linkFunc(scope) {
     var $sidebar = $("#search"),
-      $window = $(window),
-      offset = $sidebar.offset(),
-      topPadding = 0;
-
+      $window = $(window);
 
     $window.scroll(function () {
       if ($window.scrollTop() > 115 && $window.width() > 991 && scope.mainVm.trialsList && scope.mainVm.trialsList.length > 3) {
@@ -86,7 +83,7 @@
         if (vm.searchParams.study_type[param]) {
           vm.searchParams.study_vals.push(param);
         }
-      };
+      }
 
       $state.transitionTo('home', vm.searchParams);
       $http.get('/api/trials', {
