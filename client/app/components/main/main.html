@@ -1,97 +1,96 @@
 <div class="container-fluid offset-container">
-  <div class="col-md-3" id="search">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="panel">
-          <!--<button class="btn btn-success" ng-click="mainVm.postThings()">Refresh</button>-->
-          <h2>Search</h2>
-          <div class="trial-form">
-            <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
-              <div class="form-group">
-                <label for="search">Search</label>
-                <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="Enter a value to search for">
-              </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row" id="search">
+        <div class="col-sm-12">
+          <div class="panel search">
+            <button class="btn btn-success" ng-click="mainVm.postThings()">Refresh</button>
+            <h2>Search</h2>
+            <div>
+              <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
+                <div class="form-group">
+                  <label for="search">Search</label>
+                  <input type="text" class="form-control" id="search" name="search" ng-model="mainVm.searchParams.search" placeholder="Enter a value to search for">
+                </div>
 
-              <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="Enter a location (City or State)">
-              </div>
+                <div class="form-group">
+                  <label for="location">Location</label>
+                  <input type="text" class="form-control" id="location" name="location" ng-model="mainVm.searchParams.location" placeholder="Enter a location (City or State)">
+                </div>
 
-              <div class="form-group">
-                <label for="age">Age</label>
-                <input type="text" class="form-control" id="age" name="age" ng-model="mainVm.searchParams.age" placeholder="Enter an age (numerical) to search for">
-              </div>
+                <div class="form-group">
+                  <label for="age">Age</label>
+                  <input type="text" class="form-control" id="age" name="age" ng-model="mainVm.searchParams.age" placeholder="Enter an age (numerical) to search for">
+                </div>
 
-              <div class="form-group">
-                <label for="mutation">Mutation</label>
-                <div class="checkbox">
-                  <label for="exon_53">
+                <div class="form-group">
+                  <label for="mutation">Mutation</label>
+                  <div class="checkbox">
+                    <label for="exon_53">
               <input type="checkbox" id="exon_53" name="exon_53" ng-model="mainVm.searchParams.mutations.exon_53">
               Exon 53
               </label>
-                </div>
+                  </div>
 
-                <div class="checkbox">
-                  <label for="exon_51">
+                  <div class="checkbox">
+                    <label for="exon_51">
               <input type="checkbox" id="exon_51" name="exon_51" ng-model="mainVm.searchParams.mutations.exon_51">
               Exon 51
               </label>
-                </div>
+                  </div>
 
-                <div class="checkbox">
-                  <label for="exon_49">
+                  <div class="checkbox">
+                    <label for="exon_49">
               <input type="checkbox" id="exon_49" name="exon_49" ng-model="mainVm.searchParams.mutations.exon_49">
               Exon 49
               </label>
+                  </div>
+
                 </div>
 
-              </div>
+                <div class="form-group">
+                  <label for="study_type">Study Types</label>
 
-              <div class="form-group">
-                <label for="study_type">Study Types</label>
-
-                <div class="checkbox">
-                  <label for="observational">
+                  <div class="checkbox">
+                    <label for="observational">
               <input type="checkbox" id="observational" name="exon_53" ng-model="mainVm.searchParams.study_type.observational">
               Observational
               </label>
-                </div>
+                  </div>
 
-                <div class="checkbox">
-                  <label for="patient_registry">
+                  <div class="checkbox">
+                    <label for="patient_registry">
               <input type="checkbox" id="patient_registry" name="patient_registry" ng-model="mainVm.searchParams.study_type.patient_registry">
               Observational [Patient Registry]
               </label>
-                </div>
+                  </div>
 
-                <div class="checkbox">
-                  <label for="interventional">
+                  <div class="checkbox">
+                    <label for="interventional">
               <input type="checkbox" id="interventional" name="interventional" ng-model="mainVm.searchParams.study_type.interventional">
               Interventional
               </label>
-                </div>
+                  </div>
 
-                <div class="checkbox">
-                  <label for="expanded_access">
+                  <div class="checkbox">
+                    <label for="expanded_access">
               <input type="checkbox" id="expanded_access" name="expanded_access" ng-model="mainVm.searchParams.study_type.expanded_access">
               Expanded Access
               </label>
+                  </div>
                 </div>
-              </div>
 
-              <button type="submit" class="btn btn-success">{{'main.submit' | translate}}</button> {{mainVm.status}}
-            </form>
+                <button type="submit" class="btn btn-primary">{{'main.submit' | translate}}</button> {{mainVm.status}}
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-
-  <div class="col-md-9">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="panel">
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-sm-12">
 
           <div ng-if="mainVm.trialsList.length !==0" class="card ">
             <strong>Showing {{mainVm.startIndex}}
@@ -105,9 +104,9 @@
       <p data-ng-bind-html="trial.brief_summary.textblock | limitTo: 250 "></p>
       <div class="col-md-3 ">
       <h4>Age</h4>
-      <p ng-if="trial.minimum_age==0 && trial.maximum_age==200 ">No age requirements</p>
-      <p ng-if="trial.minimum_age==0 && trial.maximum_age < 200 ">Younger than {{trial.maximum_age}}</p>
-      <p ng-if="trial.minimum_age> 0 && trial.maximum_age == 200">Older than {{trial.minimum_age}}</p>
+            <p ng-if="trial.minimum_age==0 && trial.maximum_age==200 ">No age requirements</p>
+            <p ng-if="trial.minimum_age==0 && trial.maximum_age < 200 ">Younger than {{trial.maximum_age}}</p>
+            <p ng-if="trial.minimum_age> 0 && trial.maximum_age == 200">Older than {{trial.minimum_age}}</p>
             <p ng-if="trial.minimum_age > 0 && trial.maximum_age < 200">Between ages {{trial.minimum_age}} and {{trial.maximum_age}}</p>
           </div>
           <div class="col-md-3 ">
@@ -129,8 +128,20 @@
           <strong>No results found...</strong>
         </div>
         <button ng-if="mainVm.searchParams.page * mainVm.searchParams.limit + 1 + mainVm.trials.length < mainVm.total
-      " class="button " ng-click="mainVm.loadMore(); ">Load More</button>
+      " class="btn btn-primary" style="width: 100%" type="button" ng-click="mainVm.loadMore(); ">Load More</button>
       </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 panel">
+      <p>
+        For a full list of studies related to Duchenne's Muscular Dystrophy, visit <a href="www.clinicaltrials.gov">www.clinicaltrials.gov</a>.
+        The data on this site is updated daily to best match information on that site.
+      </p>
     </div>
   </div>
 </div>

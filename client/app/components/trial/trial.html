@@ -1,60 +1,118 @@
 <div class="container-fluid offset-container">
   <div class="col-md-9">
     <div class="row panel">
-      <div class="col-md-12">
-        <h2>{{vm.trial.study_type}} | {{vm.trial.overall_status}}</h2>
-        <h2>{{vm.trial.official_title}}</h2>
-        <p data-ng-bind-html="vm.trial.brief_summary.textblock"></p>
+      <div class="row">
+        <div class="col-md-12">
+          <h2>{{vm.trial.study_type}} | {{vm.trial.overall_status}}</h2>
+          <h2>{{vm.trial.official_title}}</h2>
+          <pre>
+            <p data-ng-bind-html="vm.trial.brief_summary.textblock"></p>
+          </pre>
+        </div>
       </div>
-      <div class="col-md-6">
-        <h3>Study Info</h3>
-        <h4>Study Type</h4>
-        {{vm.trial.study_type}}
-        <h4>Length Of Study</h4>
-        {{vm.trial.study_type}}
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Study Info</h3>
+          <h4>Study Type</h4>
+          {{vm.trial.study_type}}
+          <h4>Length Of Study</h4>
+          {{vm.trial.study_type}}
+        </div>
+        <div class="col-md-6">
+          <h3>Info</h3>
+          <h4>Study Phase</h4>
+          {{vm.trial.phase}}
+          <h4>Lead Sponsor</h4>
+          {{vm.trial.sponsors.lead_sponsor.agency}}
+        </div>
       </div>
-      <div class="col-md-6">
-        <h3>Info</h3>
-        <h4>Study Phase</h4>
-        {{vm.trial.phase}}
-        <h4>Lead Sponsor</h4>
-        {{vm.trial.sponsors.lead_sponsor.agency}}
+      <div class="row">
+        <div class="col-md-12">
+          <a id="eligibility"></a>
+          <h2>Eligibility Details</h2>
+          <h4>Criteria</h4>
+          <pre>
+            <p data-ng-bind-html="vm.trial.eligibility.criteria.textblock"></p>
+          </pre>
+        </div>
       </div>
-      <div class="col-md-12">
-        <a id="eligibility"></a>
-        <h2>Eligibility Details</h2>
-        <h4>Criteria</h4>
-        <p data-ng-bind-html="vm.trial.eligibility.criteria.textblock"></p>
+      <div class="row">
+        <div class="col-md-3">
+          <h4>Gender</h4>
+          <p>{{vm.trial.eligibility.gender}}</p>
+        </div>
+        <div class="col-md-3">
+          <h4>Volunteer Status</h4>
+          <p>{{vm.trial.eligibility.healthy_volunteers}}</p>
+        </div>
+        <div class="col-md-3">
+          <h4>Minimum Age</h4>
+          <p>{{vm.trial.eligibility.minimum_age}}</p>
+        </div>
+        <div class="col-md-3">
+          <h4>Maximum Age</h4>
+          <p>{{vm.trial.eligibility.maximum_age}}</p>
+        </div>
       </div>
-      <div class="col-md-3">
-        <h4>Gender</h4>
-        <p>{{vm.trial.eligibility.gender}}</p>
-      </div>
-      <div class="col-md-3">
-        <h4>Volunteer Status</h4>
-        <p>{{vm.trial.eligibility.healthy_volunteers}}</p>
-      </div>
-      <div class="col-md-3">
-        <h4>Minimum Age</h4>
-        <p>{{vm.trial.eligibility.minimum_age}}</p>
-      </div>
-      <div class="col-md-3">
-        <h4>Maximum Age</h4>
-        <p>{{vm.trial.eligibility.maximum_age}}</p>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Study Sites</h3>
+          <div ng-if="vm.configThings.locationIsArray" class="col-md-4" ng-repeat="site in vm.trial.location">
+            <div class="site">
+              <h5 class="status">{{site.status}}</h5>
+              <p>{{site.facility.address.state}}</p>
+              <p>{{site.facility.name}} {{site.facility.address.city}} {{site.facility.address.state}} {{site.facility.address.zip}}
+              </p>
+              <p ng-if="site.contact.phone"><label>Phone:</label> {{site.contact.phone}}</p>
+              <p ng-if="site.contact.email"><label>Email:</label>
+                <a ng-href="mailto:{{site.contact.email}}" target="_blank">{{site.contact.email}}</a>
+              </p>
+            </div>
+          </div>
+          <div ng-if="!vm.configThings.locationIsArray" class="col-md-6">
+            <div class="site">
+              <h5 class="status">{{vm.trial.location.status}}</h5>
+              <p>{{vm.trial.location.facility.address.state}}</p>
+              <p>{{vm.trial.location.facility.name}} {{vm.trial.location.facility.address.city}} {{vm.trial.location.facility.address.state}}
+                {{vm.trial.location.facility.address.zip}}
+              </p>
+              <p ng-if="vm.trial.location.contact.phone"><label>Phone:</label> {{vm.trial.location.contact.phone}}</p>
+              <p ng-if="vm.trial.location.contact.email"><label>Email:</label>
+                <a ng-href="mailto:{{vm.trial.location.contact.email}}" target="_blank">{{vm.trial.location.contact.email}}</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-3" id="eligibilityList">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel">
-          <h2>Eligibility</h2>
-          <small>See <a href="" ng-click="vm.goToAnchor('eligibility')">Eligibility Details</a> for detailed information</small>
+
+  <div class="col-md-3">
+    <div id="eligibilityList">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
+            <h2>Eligibility</h2>
+            <small>See <a href="" ng-click="vm.goToAnchor('eligibility')">Eligibility Details</a> for detailed
+              information</small>
+            <h4>Age</h4>
+            <p ng-if="vm.trial.minimum_age==0 && vm.trial.maximum_age==200 ">No age requirements</p>
+            <p ng-if="vm.trial.minimum_age==0 && vm.trial.maximum_age < 200 ">Younger than {{vm.trial.maximum_age}}</p>
+            <p ng-if="vm.trial.minimum_age> 0 && vm.trial.maximum_age == 200">Older than {{vm.trial.minimum_age}}</p>
+            <p ng-if="vm.trial.minimum_age > 0 && vm.trial.maximum_age < 200">Between ages {{vm.trial.minimum_age}} and {{vm.trial.maximum_age}}</p>
+            <h4>Gender</h4>
+            <p>{{vm.trial.eligibility.gender}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
+            <a ng-href=" {{vm.trial.required_header.url}}" target="_blank">{{vm.trial.required_header.download_date}}</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<h3>Dump of available data (temp)</h3>
-<div class="panel">{{vm.trial}}</div>

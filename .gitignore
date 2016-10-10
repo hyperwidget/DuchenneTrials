@@ -11,3 +11,7 @@ bower_components/
 tmp/
 dist/
 coverage/
+
+.DS_Store
+
+.DS_Store

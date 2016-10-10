@@ -10,6 +10,18 @@ var url = 'mongodb://localhost:27017/duchenne-trials-dev';
 var assert = require('assert');
 var BSON = require('bson').BSONPure
 var tmpFilesDir = './tmp/files';
+var nodemailer = require('nodemailer');
+
+// create reusable transporter object using the default SMTP transport 
+var transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // use SSL 
+  auth: {
+    user: 'rawkamatic@gmail.com',
+    pass: 'fvoghtoflvbpsemm'
+  }
+});
 
 /**
  * GET /trials
@@ -147,6 +159,7 @@ exports.get = function (req, res) {
  *
  */
 exports.post = function (req, res) {
+  console.log('refresh');
   clearTmpFiles();
 
   request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true')
@@ -174,6 +187,7 @@ exports.post = function (req, res) {
             });
           });
           db.close();
+          sendEmailUpdate(`DATABASE REFRESHED; ${filenames.length} records in database.`);
           return res.status(200).json();
         });
       });
@@ -181,7 +195,7 @@ exports.post = function (req, res) {
 };
 
 function applyLastLocalUpdate(trial) {
-  return Object.assign(trial, { lastLocalUpdate: new Date().toLocaleTimeString() });
+  return Object.assign(trial, { lastLocalUpdate: new Date().toLocaleString() });
 }
 
 function applyMutations(trial) {
@@ -199,7 +213,7 @@ function applyMutations(trial) {
     mutations.exon_49 = true;
   }
 
-  return Object.assign(trial, {mutations: mutations});
+  return Object.assign(trial, { mutations: mutations });
 }
 
 function applyAges(trial) {
@@ -261,11 +275,12 @@ function clearTmpFiles() {
 }
 
 exports.getUpdates = function (req, res) {
+  console.log('updates');
   clearTmpFiles();
   var d = new Date();
   d.setDate(d.getDate() - 1);
   var searchDate = ("0" + (d.getMonth() + 1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear()
-  request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=' + searchDate)
+  request.get(`http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=${searchDate}`)
     .pipe(fs.createWriteStream('./tmp/bootstrap.zip'))
     .on('close', function () {
       var parser = new xml2js.Parser({ ignoreAttrs: true, explicitArray: false, trim: true });
@@ -288,13 +303,33 @@ exports.getUpdates = function (req, res) {
                 });
               });
             });
+            sendEmailUpdate(`Update pulled; ${filenames.length} records changed.`);
             db.close();
             return res.status(200).json();
           });
         });
       } catch (except) {
         console.log(except);
+        sendEmailUpdate(`Update pulled; issue unzipping; no records changed`);
         return res.status(200).json();
       }
     });
 };
+
+function sendEmailUpdate(message) {
+  console.log(message);
+  var mailOptions = {
+    from: '"Duchenne Trials" <rawkamatic@gmail.com>', // sender address 
+    to: 'rawkamatic@gmail.com', // list of receivers 
+    subject: 'There was an update', // Subject line 
+    text: message, // plaintext body 
+    html: message // html body 
+  };
+
+  // send mail with defined transport object 
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      return console.log(error);
+    }
+  });
+}

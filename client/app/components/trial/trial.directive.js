@@ -20,16 +20,13 @@
       offset = $eligibility.offset(),
       topPadding = 0;
 
-
     $window.scroll(function () {
       if ($window.scrollTop() > 115 && $window.width() > 991) {
-        $eligibility.css({
-          marginTop: $window.scrollTop() - 115 + topPadding
-        });
+        $eligibility.addClass('affix');
+        $eligibility.removeClass('affix-top');
       } else {
-        $eligibility.css({
-          marginTop: 0
-        });
+        $eligibility.addClass('affix-top');
+        $eligibility.removeClass('affix');
       }
     });
   }
@@ -38,11 +35,13 @@
 
   function TrialCtrl($http, $state, $anchorScroll, $location) {
     var vm = this;
+    vm.configThings = {};
 
     vm.getThing = function () {
       $http.get('/api/trials/' + $state.params.trialId)
         .then(function (response) {
           vm.trial = response.data;
+          vm.configThings.locationIsArray = angular.isArray(vm.trial.location); 
         });
     };
     vm.getThing();
@@ -58,5 +57,7 @@
         $anchorScroll();
       }
     };
+
+    vm.isArray = angular.isArray;
   }
 })();

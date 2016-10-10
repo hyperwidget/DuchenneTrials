@@ -14,7 +14,7 @@
       };
     });
 
-  function linkFunc() {
+  function linkFunc(scope) {
     var $sidebar = $("#search"),
       $window = $(window),
       offset = $sidebar.offset(),
@@ -22,14 +22,12 @@
 
 
     $window.scroll(function () {
-      if ($window.scrollTop() > 115 && $window.width() > 991) {
-        $sidebar.css({
-          marginTop: $window.scrollTop() - 115 + topPadding
-        });
+      if ($window.scrollTop() > 115 && $window.width() > 991 && scope.mainVm.trialsList && scope.mainVm.trialsList.length > 3) {
+        $sidebar.addClass('affix');
+        $sidebar.removeClass('affix-top');
       } else {
-        $sidebar.css({
-          marginTop: 0
-        });
+        $sidebar.addClass('affix-top');
+        $sidebar.removeClass('affix');
       }
     });
   }
