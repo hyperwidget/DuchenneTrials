@@ -1,3 +1,5 @@
+/*@import 'https://fonts.googleapis.com/css?family=Droid+Sans';
+@import 'https://fonts.googleapis.com/css?family=Chewy';*/
 /* ngcloak
  * Docs : https://docs.angularjs.org/api/ng/directive/ngCloak
  */
@@ -72,8 +74,6 @@ pre {
   padding: 2px 16px;
 }
 
-@import 'https://fonts.googleapis.com/css?family=Droid+Sans';
-@import 'https://fonts.googleapis.com/css?family=Chewy';
 body {
   font-family: "Droid Sans", "Verdana", "Arial", sans-serif;
   background: #444444;
