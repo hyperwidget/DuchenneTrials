@@ -98,7 +98,8 @@
           of {{mainVm.total}}
       </strong>
           </div>
-          <div ng-repeat="trial in mainVm.trialsList" class="col-sm-12 card" ui-sref="trial({ trialId: trial._id })" ">
+          <div ng-repeat="trial in mainVm.trialsList" class="row card" ui-sref="trial({ trialId: trial._id })" ">
+            <div class="col-md-12 ">
       <h3>{{trial.study_type}} | {{trial.overall_status}}</h3>
       <h3>{{trial.official_title}}</h3>
       <p data-ng-bind-html="trial.brief_summary.textblock | limitTo: 250 "></p>
@@ -124,15 +125,18 @@
             <p>{{trial.eligibility.maximum_age}}</p>
           </div>
         </div>
-        <div ng-if="mainVm.trialsList.length==0 " class="card ">
-          <strong>No results found...</strong>
-        </div>
-        <button ng-if="mainVm.searchParams.page * mainVm.searchParams.limit + 1 + mainVm.trials.length < mainVm.total
+      </div>
+      <div ng-if="mainVm.trialsList.length==0 " class="card ">
+        <strong>No results found...</strong>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button ng-if="mainVm.searchParams.page * mainVm.searchParams.limit + 1 + mainVm.trials.length < mainVm.total
       " class="btn btn-primary" style="width: 100%" type="button" ng-click="mainVm.loadMore(); ">Load More</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <div class="container">
