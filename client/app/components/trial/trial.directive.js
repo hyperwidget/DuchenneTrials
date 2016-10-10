@@ -41,7 +41,7 @@
       $http.get('/api/trials/' + $state.params.trialId)
         .then(function (response) {
           vm.trial = response.data;
-          vm.configThings.locationIsArray = angular.isArray(vm.trial.location); 
+          vm.configThings.locationIsArray = angular.isArray(vm.trial.location);
         });
     };
     vm.getThing();

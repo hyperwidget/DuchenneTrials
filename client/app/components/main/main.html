@@ -4,7 +4,7 @@
       <div class="row" id="search">
         <div class="col-sm-12">
           <div class="panel search">
-            <button class="btn btn-success" ng-click="mainVm.postThings()">Refresh</button>
+            <!--<button class="btn btn-success" ng-click="mainVm.postThings()">Refresh</button>-->
             <h2>Search</h2>
             <div>
               <form role="form" name="trialPostForm" ng-submit="mainVm.search()" novalidate>
@@ -23,7 +23,7 @@
                   <input type="text" class="form-control" id="age" name="age" ng-model="mainVm.searchParams.age" placeholder="Enter an age (numerical) to search for">
                 </div>
 
-                <div class="form-group">
+                <!--<div class="form-group">
                   <label for="mutation">Mutation</label>
                   <div class="checkbox">
                     <label for="exon_53">
@@ -46,7 +46,7 @@
               </label>
                   </div>
 
-                </div>
+                </div>-->
 
                 <div class="form-group">
                   <label for="study_type">Study Types</label>
@@ -94,10 +94,21 @@
 
           <div ng-if="mainVm.trialsList.length !==0" class="card ">
             <strong>Showing {{mainVm.startIndex}}
-          - {{mainVm.endIndex}} 
-          of {{mainVm.total}}
-      </strong>
+              - {{mainVm.endIndex}} 
+              of {{mainVm.total}}
+            </strong>
           </div>
+
+          <!--Search param easy removal-->
+          <span class="label label-primary" ng-if="mainVm.lastSearch.search">{{mainVm.lastSearch.search}} <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('search');"></span></span>
+          <span class="label label-primary" ng-if="mainVm.lastSearch.location">{{mainVm.lastSearch.location}} <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('location');"></span></span>
+          <span class="label label-primary" ng-if="mainVm.lastSearch.age">{{mainVm.lastSearch.age}} <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('age');"></span></span>
+
+          <span class="label label-primary" ng-if="mainVm.lastSearch.study_type.observational">Observational <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('study_type', 'observational');"></span></span>
+          <span class="label label-primary" ng-if="mainVm.lastSearch.study_type.patient_registry">Observational[Patient Registry] <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('study_type', 'patient_registry');"></span></span>
+          <span class="label label-primary" ng-if="mainVm.lastSearch.study_type.interventional">Interventional <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('study_type', 'interventional');"></span></span>
+          <span class="label label-primary" ng-if="mainVm.lastSearch.study_type.expanded_access">Expanded Access <span class=" glyphicon glyphicon-remove selectable" ng-click="mainVm.removeSearchParam('study_type', 'expanded_access');"></span></span>
+
           <div ng-repeat="trial in mainVm.trialsList" class="row card" ui-sref="trial({ trialId: trial._id })" ">
             <div class="col-md-12 ">
       <h3>{{trial.study_type}} | {{trial.overall_status}}</h3>

@@ -21,25 +21,33 @@
   padding: 10px;
 }
 
-.panel.search{
+.panel.search {
   padding: 0 20px;
 }
 
-#search.affix{
+.selectable{
+  cursor: pointer;
+}
+
+#search.affix {
   top: 0;
 }
 
-#eligibilityList.affix{
+#eligibilityList.affix {
   top: 58px;
 }
 
-pre{
+.closer {
+  float: right;
+  cursor: pointer;
+}
+
+pre {
   border: none;
   background-color: inherit;
   font-family: inherit;
   font-size: inherit;
 }
-
 
 .card {
   /* Add shadows to create the "card" effect */
@@ -49,6 +57,7 @@ pre{
   margin-top: 10px;
 }
 
+
 /* On mouse-over, change colour a littl */
 
 .card:hover {
@@ -56,7 +65,9 @@ pre{
   cursor: pointer;
 }
 
+
 /* Add some padding inside the card container */
+
 .container {
   padding: 2px 16px;
 }

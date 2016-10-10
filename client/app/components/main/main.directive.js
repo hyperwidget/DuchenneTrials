@@ -32,9 +32,9 @@
     });
   }
 
-  MainCtrl.$inject = ['$http'];
+  MainCtrl.$inject = ['$http', '$state', '$stateParams'];
 
-  function MainCtrl($http) {
+  function MainCtrl($http, $state, $stateParams) {
     var vm = this;
 
     vm.thing = {};
@@ -46,7 +46,49 @@
     vm.startIndex = 1;
     vm.endIndex = 20;
 
+    if ($stateParams.location) {
+      vm.searchParams.location = $stateParams.location;
+    }
+
+    if ($stateParams.age) {
+      vm.searchParams.age = $stateParams.age;
+    }
+
+    if ($stateParams.search) {
+      vm.searchParams.search = $stateParams.search;
+    }
+
+    if ($stateParams.study_vals) {
+      vm.searchParams.study_type = {};
+      if (angular.isArray($stateParams.study_vals)) {
+        angular.forEach($stateParams.study_vals, function (val) {
+          vm.searchParams.study_type[val] = true;
+        })
+      } else {
+        vm.searchParams.study_type[$stateParams.study_vals] = true;
+      }
+    }
+
+    vm.removeSearchParam = function(index, val){
+
+      if(!val){
+        delete vm.searchParams[index];
+      } else {
+        delete vm.searchParams.study_type[val];
+      }
+      
+      vm.search();
+    }
+
     vm.getThings = function () {
+      vm.searchParams.study_vals = [];
+      for (var param in vm.searchParams.study_type) {
+        if (vm.searchParams.study_type[param]) {
+          vm.searchParams.study_vals.push(param);
+        }
+      };
+
+      $state.transitionTo('home', vm.searchParams);
       $http.get('/api/trials', {
         params: vm.searchParams
       })
@@ -54,6 +96,7 @@
           vm.trialsList = vm.trialsList.concat(response.data.trials);
           vm.total = response.data.total;
           vm.endIndex = vm.trialsList.length;
+          vm.lastSearch = angular.copy(vm.searchParams);
         });
     };
     vm.getThings();

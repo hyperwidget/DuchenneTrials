@@ -10,13 +10,15 @@
   function routes($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('home', {
-      url: '/',
+      url: '/?page&limit&location&search&age&study_vals',
+      reloadOnSearch: false,
       template: '<main></main>'
     });
 
     $stateProvider.state('trial', {
       url: '/{trialId}',
-      template: '<trial></trial>'
+      template: '<trial></trial>',
+      reloadOnSearch: false
     });
 
     $urlRouterProvider.otherwise('/');
