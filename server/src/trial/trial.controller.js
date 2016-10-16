@@ -278,7 +278,7 @@ exports.getUpdates = function (req, res) {
   console.log('updates');
   clearTmpFiles();
   var d = new Date();
-  d.setDate(d.getDate() - 1);
+  d.setDate(d.getDate() - 3);
   var searchDate = ("0" + (d.getMonth() + 1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear()
   request.get('http://clinicaltrials.gov/ct2/results?term=dmd&recr=Open&resultsxml=true&lup_s=' + searchDate)
     .pipe(fs.createWriteStream('./tmp/bootstrap.zip'))
